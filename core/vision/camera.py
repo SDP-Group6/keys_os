@@ -1,9 +1,24 @@
+import os
+
 import cv2
 
 def take_photo(path):
 
+    # Delete the path is it already exists
+    if os.path.exists(path):
+        os.remove(path)
+
     # Initialize the webcam (0 is the default camera)
-    cap = cv2.VideoCapture(0)
+
+    # Get the type of operating system
+    os_type = os.name
+
+    # Check if we are using mac
+    if os_type == "posix":
+        print("Using AVFoundation backend for macOS.")
+        cap = cv2.VideoCapture(0, cv2.CAP_AVFOUNDATION)
+    else:
+        cap = cv2.VideoCapture(0)
 
     # Allow camera to warm up
     if not cap.isOpened():
