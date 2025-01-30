@@ -28,8 +28,6 @@ def draw_bounding_boxes_on_image(image_path, predictions_json, output_path=None,
     except IOError:
         font = ImageFont.load_default()
 
-    print("predictions_json:", predictions_json)
-
     if isinstance(predictions_json, str):
         # Parse the JSON response
         data = json.loads(predictions_json)
