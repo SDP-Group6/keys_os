@@ -1,7 +1,9 @@
+import json
 import requests
+import cv2
+import numpy as np
 
 from core.const import PREDICT_URL
-
 
 def predict_image(path):
 
@@ -23,3 +25,27 @@ def predict_image(path):
 
     # Return the response
     return response.json()
+
+def extract_keyboard_and_detect_edges(path, predictions):
+    image = cv2.imread(path)
+    if image is None:
+        raise FileNotFoundError(f"Unable to load image at path: {path}")
+
+    results = predictions['predictions']['result']
+    keyboard_bounding_box = None
+    for result in results:
+        if result['label'] == 'keyboard':
+            keyboard_bounding_box = result['box'] 
+            break
+
+    if keyboard_bounding_box is None:
+        return None
+
+    keyboard_region = image[keyboard_bounding_box['ymin']:keyboard_bounding_box['ymax'],
+                            keyboard_bounding_box['xmin']:keyboard_bounding_box['xmax']]
+    
+    edges = cv2.Canny(keyboard_region, 100, 200)
+    if edges is None or edges.size == 0:
+        raise ValueError("Edge detection failed or returned empty results.")
+
+    return keyboard_bounding_box, edges
