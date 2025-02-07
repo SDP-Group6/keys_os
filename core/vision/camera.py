@@ -1,5 +1,4 @@
 import os
-
 import cv2
 
 def take_photo(path):
