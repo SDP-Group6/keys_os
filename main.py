@@ -1,5 +1,5 @@
 from core.cleaning.usb import Arduino
-from core.vision.ai import predict_image
+from core.vision.ai import predict_image, extract_keyboard_and_detect_edges
 from core.vision.camera import Camera
 
 # The path where we will save temporary images
@@ -10,16 +10,17 @@ def main():
     ard = Arduino("/dev/tty.usbmodem0000011")
     cam = Camera()
 
+
     for _ in range(100):
 
         # Take a photo
         cam.take_photo(path)
 
         # Predict the image
-        prediction_image = predict_image(path)
+        predictions = predict_image(path)
 
         # Get the predictions
-        prediction = prediction_image["predictions"]
+        prediction = predictions["predictions"]
         result = prediction["result"]
 
         scores = {}
@@ -31,7 +32,6 @@ def main():
             # Check if the label is already in the scores
             if label not in scores or scores[label] is None or scores[label] < score:
                 scores[label] = score
-
 
         if "keyboard" in scores and scores["keyboard"] > 0.5:
             print("Keyboard Detected!")

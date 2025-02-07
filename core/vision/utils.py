@@ -100,28 +100,3 @@ def draw_keyboard_bounding_box_on_image(image_path, keyboards_data, output_path=
     # Save the image
     white_image.save(output_path)
     print(f"Saved keyboard bounding box image to {output_path}")
-    
-    ''''
-
-    # Get bounding box coordinates
-    x = keyboard_bounding_box['xmin']
-    y = keyboard_bounding_box['ymin']
-    w = keyboard_bounding_box['xmax'] - keyboard_bounding_box['xmin']
-    h = keyboard_bounding_box['ymax'] - keyboard_bounding_box['ymin']
-
-    # Draw the bounding box on the black image
-    draw_white.rectangle([x, y, x + w, y + h], outline="blue", width=3)
-
-    # Iterate over contours and draw them on the black image
-    for points in all_points:
-        # Draw the translated contours on the black image
-        draw_white.polygon(points, outline="red", width=3)
-
-    # Ensure output_path is a valid string
-    if not isinstance(output_path, str):
-        raise ValueError(f"Invalid output path type: {type(output_path)}, value: {output_path}")
-
-    # Save the black image
-    white_image.save(output_path)
-    print(f"Saved keyboard bounding box image to {output_path}")
-    '''

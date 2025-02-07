@@ -37,7 +37,8 @@ def extract_keyboard_and_detect_edges(path, predictions):
     keyboards_data = {}
     
     for result in results:
-        if result['label'] == 'keyboard':
+
+        if result['label'] == 'keyboard' and result['score'] > 0.7:
             
             keyboard_bounding_box = result['box'] 
             
