@@ -1,37 +1,45 @@
 import os
 import cv2
+import time
 
-def take_photo(path):
+class Camera:
+    def __init__(self):
+        """Initialize the camera once to avoid reinitialization delays."""
+        os_type = os.name
+        if os_type == "posix":
+            print("Using AVFoundation backend for macOS.")
+            self.cap = cv2.VideoCapture(0, cv2.CAP_AVFOUNDATION)
+        else:
+            self.cap = cv2.VideoCapture(0)
 
-    # Delete the path is it already exists
-    if os.path.exists(path):
-        os.remove(path)
+        if not self.cap.isOpened():
+            print("Error: Could not open camera.")
+            raise Exception("Could not open camera.")
 
-    # Initialize the webcam (0 is the default camera)
+        # Set camera properties for speed optimization
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # Reduce resolution
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # Reduce buffering delay
 
-    # Get the type of operating system
-    os_type = os.name
+        # Warm-up: Capture a few frames before the first photo
+        for _ in range(5):
+            self.cap.read()
+            time.sleep(0.05)  # Allow auto-adjustments
 
-    # Check if we are using mac
-    if os_type == "posix":
-        print("Using AVFoundation backend for macOS.")
-        cap = cv2.VideoCapture(0, cv2.CAP_AVFOUNDATION)
-    else:
-        cap = cv2.VideoCapture(0)
+    def take_photo(self, path):
+        """Capture and save a photo to the given path."""
+        if os.path.exists(path):
+            os.remove(path)  # Delete existing file
 
-    # Allow camera to warm up
-    if not cap.isOpened():
-        print("Error: Could not open camera.")
-        raise Exception("Could not open camera.")
+        ret, frame = self.cap.read()
+        if ret:
+            cv2.imwrite(path, frame)
+            print(f"Image saved successfully: {path}")
+        else:
+            print("Error: Failed to capture image.")
 
-    # Capture a single frame
-    ret, frame = cap.read()
-
-    if ret:
-        # Save the image
-        cv2.imwrite(path, frame)
-        print("Image saved successfully.")
-
-    # Release the camera and close OpenCV windows
-    cap.release()
-    cv2.destroyAllWindows()
+    def close(self):
+        """Release the camera resources."""
+        self.cap.release()
+        cv2.destroyAllWindows()
+        print("Camera released.")

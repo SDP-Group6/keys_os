@@ -15,6 +15,12 @@ class Arduino:
         # Set the baudrate
         self.baudrate = baudrate
 
+        # The serial we will use
+        self.ser = None
+
+        # Init serial
+        self.init_serial()
+
     @property
     def port(self):
 
@@ -56,48 +62,44 @@ class Arduino:
                 pass
 
 
-    def send_json(self, data: dict) -> dict:
+    def init_serial(self):
 
-        # Setup the serial
-        ser = serial.Serial(self.port, self.baudrate, timeout=1)
-        time.sleep(2)
+        if self.ser is None:
+            self.ser = serial.Serial(self.port, self.baudrate, timeout=1)
+            time.sleep(2)
+
+    def deinit_serial(self):
+
+        if self.ser is not None:
+            self.ser.close()
+
+        # Set the serial to None
+        self.ser = None
+
+
+    def send_json(self, data: dict) -> dict:
 
         # Convert to string
         data_str = (json.dumps(data) + "\n").encode("utf-8")
 
         # Write the data
-        ser.write(data_str)
-
-        # The response to return
-        response = None
+        self.ser.write(data_str)
 
         # Wait for the response
         for _ in range(100):
-            response = ser.readline().decode("utf-8").strip()
+            response = self.ser.readline()
+            # .decode("utf-8").strip()
             print("Arduino says:", response)
 
             # If the response is not empty
             if response:
                 break
 
-        # Close the
-        ser.close()
-
         # # Deserialise the response
         # if response is not None:
         #     return json.loads(response)
 
     def send_cmd(self, cmd, val, port=None) -> dict:
-
-        if port is None:
-            if self.port is None:
-                raise ValueError("Port is None")
-            else:
-                port = self.port
-
-        # Open Serial Connection
-        arduino = serial.Serial(port, self.baudrate, timeout=1)
-        time.sleep(2)  # Allow time for connection to establish
 
         # The data we want to send
         data = {"cmd": cmd, "val": val}
@@ -110,4 +112,4 @@ if __name__ == "__main__":
     ard = Arduino("/dev/tty.usbmodem0000011")
     # ard.find_port()
 
-    ard.send_cmd("led", 0)
+    ard.send_cmd("bob", 9)
