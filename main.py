@@ -10,18 +10,20 @@ path = "tmp/image.jpeg"
 def main():
 
     # Take a photo
-    take_photo(path)
+    # take_photo(path)
 
     # Predict the image
     predictions = predict_image(path)
 
     # Extract the keyboard region and detect edges
-    keyboard_bounding_box, edges = extract_keyboard_and_detect_edges(path, predictions)
+    keyboards_data = extract_keyboard_and_detect_edges(path, predictions)
+    
+    # print("Keyboard data", keyboards_data)
     
     # Draw bounding boxes on the image
     draw_bounding_boxes_on_image(path, predictions)
     
-    draw_keyboard_bounding_box_on_image(path, keyboard_bounding_box, edges)
+    draw_keyboard_bounding_box_on_image(path, keyboards_data)
     
 if __name__ == "__main__":
     main()
