@@ -3,8 +3,8 @@ import requests
 import cv2
 import numpy as np
 
-from core.const import PREDICT_URL
-
+from core.const import PREDICT_URL, KEYBOARD_THRESHOLD 
+    
 def predict_image(path):
 
     # Get the image data from the path
@@ -38,7 +38,7 @@ def extract_keyboard_and_detect_edges(path, predictions):
     
     for result in results:
 
-        if result['label'] == 'keyboard' and result['score'] > 0.7:
+        if result['label'] == 'keyboard' and result['score'] >= KEYBOARD_THRESHOLD:
             
             keyboard_bounding_box = result['box'] 
             

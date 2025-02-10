@@ -4,6 +4,10 @@ import numpy as np
 
 from PIL import Image, ImageDraw, ImageFont
 
+from core.const import STANDARD_KEYBOARD_LENGTH_MM, \
+    STANDARD_KEYBOARD_BREADTH_MM, STANDARD_KEYBOARD_HEIGHT_MM, \
+    CAMERA_PROPERTIES_MM
+
 def draw_bounding_boxes_on_image(image_path, predictions_json, output_path='tmp/all_boxes.jpeg', min_score=0.5):
     """
     Draws bounding boxes on the image based on predictions in the response JSON.
@@ -100,3 +104,25 @@ def draw_keyboard_bounding_box_on_image(image_path, keyboards_data, output_path=
     # Save the image
     white_image.save(output_path)
     print(f"Saved keyboard bounding box image to {output_path}")
+    
+def estimate_distance_from_camera(keyboard_bounding_box):
+    
+    # Get the bounding box coordinates
+    xmin = keyboard_bounding_box['xmin']
+    ymin = keyboard_bounding_box['ymin']
+    xmax = keyboard_bounding_box['xmax']
+    ymax = keyboard_bounding_box['ymax']
+    
+    # Get the image width and height
+    image_keyboard_width = xmax - xmin
+    image_keyboard_height = ymax - ymin
+    
+    # Calculate the distance from the camera
+    focal_length = CAMERA_PROPERTIES_MM['focal_length']
+    pixel_size = CAMERA_PROPERTIES_MM['pixel_size']
+    
+    distance = (focal_length * STANDARD_KEYBOARD_LENGTH_MM / (image_keyboard_width * pixel_size),
+                focal_length * STANDARD_KEYBOARD_BREADTH_MM / (image_keyboard_height * pixel_size))
+    
+    print(f"Estimated distance from camera: ({distance[0]:.2f} mm, {distance[1]:.2f} mm)")
+    return distance
