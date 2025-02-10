@@ -1,4 +1,6 @@
 import requests
+import cv2
+import numpy as np
 
 from core.const import PREDICT_URL, KEYBOARD_THRESHOLD 
     
