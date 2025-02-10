@@ -1,5 +1,5 @@
 from core.cleaning.usb import Arduino
-from core.vision.ai import predict_image, extract_keyboard_and_detect_edges
+from core.vision.ai import predict_image
 from core.vision.camera import Camera
 
 # The path where we will save temporary images
