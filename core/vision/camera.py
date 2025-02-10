@@ -1,5 +1,8 @@
 import os
-import cv2
+try:
+    import cv2
+except ImportError:
+    pass
 import time
 try:
     from picamera2 import Picamera2
@@ -56,8 +59,7 @@ class Camera:
             os.remove(path)  # Delete existing file
 
         if self.pi_camera:
-            frame = self.pi_camera.capture_array()
-            cv2.imwrite(path, frame)
+            self.pi_camera.capture_file(path)
             print(f"Image saved successfully from Pi Camera: {path}")
         elif self.usb_camera:
             ret, frame = self.usb_camera.read()
