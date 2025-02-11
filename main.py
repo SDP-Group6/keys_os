@@ -1,15 +1,26 @@
 from core.cleaning.usb import Arduino
+from core.utils.wifi import connect_wifi
 from core.vision.ai import predict_image
 from core.vision.camera import Camera
 
 # The path where we will save temporary images
+ssid = ""
+password = ""
 path = "tmp/image.jpeg"
+usb_serial = "/dev/ttyACM0"
 
 
 def main():
-    ard = Arduino("/dev/tty.usbmodem0000011")
+
+    # Set up the arduino and camera
+    ard = Arduino(usb_serial)
     cam = Camera()
 
+    # Connect to wifi
+    success = connect_wifi(ssid, password)
+
+    if not success:
+        raise Exception("Failed to connect to wifi")
 
     for _ in range(100):
 
