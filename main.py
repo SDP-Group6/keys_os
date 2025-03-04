@@ -16,7 +16,7 @@ def main():
     ard = Arduino(usb_serial)
     cam = Camera()
 
-    # Connect to wifi
+    #Connect to wifi
     success = connect_wifi(ssid, password)
 
     if not success:

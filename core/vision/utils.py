@@ -6,7 +6,7 @@ from core.const import STANDARD_KEYBOARD_LENGTH_MM, \
     STANDARD_KEYBOARD_BREADTH_MM, STANDARD_KEYBOARD_HEIGHT_MM, \
     CAMERA_PROPERTIES_MM
 
-def draw_bounding_boxes_on_image(image_path, predictions_json, output_path='tmp/all_boxes.jpeg', min_score=0.5):
+def draw_bounding_boxes_on_image(image_path='/Input', predictions_json, output_path='tmp/all_boxes.jpeg', min_score=0.5):
     """
     Draws bounding boxes on the image based on predictions in the response JSON.
 
@@ -124,3 +124,14 @@ def estimate_distance_from_camera(keyboard_bounding_box):
     
     print(f"Estimated distance from camera: ({distance[0]:.2f} mm, {distance[1]:.2f} mm)")
     return distance
+
+
+def calculate_performance(TP=1, TN=1, FP=1, FN=1):
+
+    #Prints a measurement of model's performance
+    accuracy=(TP+TN)/(TP+TN+FN+FP)
+    precision=TP/(TP+FP)
+    recall=TP/(TP+FN)
+    F1 = 2*(precision*recall/(precision+recall))
+
+    print(accuracy, precision, recall, F1)
