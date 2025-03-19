@@ -14,10 +14,17 @@ lock = threading.Lock()
 
 def init_app():
     global db, keyboards
-    cred = credentials.Certificate("keys-b4f24-firebase-adminsdk-fbsvc-ed4e02e506.json")
+    cred = credentials.Certificate("keys-b4f24-firebase-adminsdk-fbsvc-0873493bf4.json")
     firebase_admin.initialize_app(cred)
     db = firestore.client()
     keyboards = db.collection("keyboards")
+
+    # Create a document for counting the number of runs we have done
+    db.collection("runs").add({
+        "timestamp": datetime.datetime.now()
+    })
+
+    print("Initialized the app.")
 
 
 def clean_keyboard(keyboard_data):
@@ -34,6 +41,8 @@ def clean_keyboard(keyboard_data):
         keyboards.document(keyId).update({
             "progress": 0.3
         })
+
+    # TODO: Implement turtle bot stuff here
 
     # Simulate cleaning process (e.g., the turtle bot cleaning)
     time.sleep(5)
@@ -83,7 +92,7 @@ def firebase_main():
     init_app()
 
     # Listen to the keyboard collection snapshots
-    keyboards.order_by("lastRequested").on_snapshot(keyboard_listener)
+    db.collection("keyboards").order_by("lastRequested").on_snapshot(keyboard_listener)
 
     print("Listening for changes. Press Ctrl+C to exit.")
     try:
@@ -98,4 +107,4 @@ def firebase_main():
 
 
 if __name__ == "__main__":
-    main()
+    firebase_main()
