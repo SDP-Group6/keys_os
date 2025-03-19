@@ -14,7 +14,7 @@ lock = threading.Lock()
 
 def init_app():
     global db, keyboards
-    cred = credentials.Certificate("service json here")
+    cred = credentials.Certificate("keys-b4f24-firebase-adminsdk-fbsvc-ed4e02e506.json")
     firebase_admin.initialize_app(cred)
     db = firestore.client()
     keyboards = db.collection("keyboards")
