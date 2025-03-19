@@ -1,4 +1,5 @@
 from core.cleaning.usb import Arduino
+from core.firebase import firebase_main
 from core.utils.wifi import connect_wifi
 from core.vision.ai import predict_image
 from core.vision.camera import Camera
@@ -55,4 +56,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    firebase_main()

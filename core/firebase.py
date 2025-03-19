@@ -78,7 +78,7 @@ def keyboard_listener(col_snapshot, changes, read_time):
         keyboards_to_clean.put(data)
 
 
-def main():
+def firebase_main():
     # Initialize the firebase app
     init_app()
 
