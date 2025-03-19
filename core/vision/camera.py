@@ -2,9 +2,10 @@ import os
 import cv2
 import time
 
+
 class Camera:
     def __init__(self):
-        """Initialize the camera once to avoid reinitialization delays."""
+        #Initialize the camera once to avoid reinitialization delays.
         os_type = os.name
         if os_type == "posix":
             print("Using AVFoundation backend for macOS.")
